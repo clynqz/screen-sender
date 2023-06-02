@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace ScreenSender.Managers;
 
-namespace ScreenSender
+public static class ScreenManager
 {
-    internal class ScreenManager
-    {
-    }
 }
