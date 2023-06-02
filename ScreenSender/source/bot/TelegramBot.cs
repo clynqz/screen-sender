@@ -1,6 +1,5 @@
 ﻿using Telegram.Bot;
-using Telegram.Bot.Polling;
-using Telegram.Bot.Types;
+using Telegram.Bot.Types.InputFiles;
 
 namespace ScreenSender.Bot;
 
@@ -8,11 +7,7 @@ public class TelegramBot
 {
     private static readonly Lazy<TelegramBot> _instance;
 
-    private readonly TelegramBotClient _client;
-
-    private readonly ReceiverOptions _receiverOptions;
-
-    private readonly CancellationTokenSource _cancellationTokenSource;
+    private TelegramBotClient? _client;
 
     public static TelegramBot Instance => _instance.Value;
 
@@ -21,39 +16,24 @@ public class TelegramBot
         _instance = new Lazy<TelegramBot>(() => new TelegramBot());
     }
 
-    public TelegramBot()
+    private TelegramBot()
     {
-        _client = new TelegramBotClient(Settings.BotToken);
-        _receiverOptions = new ReceiverOptions();
-        _cancellationTokenSource = new CancellationTokenSource();
     }
 
-    public void StartReceiving()
+    public void Init(string token)
     {
-        _client.StartReceiving(
-            updateHandler: HandleUpdateAsync,
-            pollingErrorHandler: HandlePollingErrorAsync,
-            receiverOptions: _receiverOptions,
-            cancellationToken: _cancellationTokenSource.Token);
+        _client = new TelegramBotClient(token);
     }
 
-    public void StopReceiving()
+    public async Task SendImageAsync(string imagePath, IEnumerable<long> receivers)
     {
+        using var stream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
 
-    }
+        var photo = new InputOnlineFile(stream);
 
-    private async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
-    {
-        Console.WriteLine(update.Message.From.Username);
-    }
-
-    private async Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
-    {
-
-    }
-
-    private async Task SendTextMessageAsync(ChatId chatId, string text)
-    {
-        await _client.SendTextMessageAsync(chatId, text, cancellationToken: CancellationToken.None);
+        foreach (var receiver in receivers)
+        {
+            await _client!.SendPhotoAsync(chatId: receiver, photo: photo, cancellationToken: CancellationToken.None);
+        }
     }
 }

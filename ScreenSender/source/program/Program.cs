@@ -14,15 +14,18 @@ public class Program
 
         KeyboardManager.SetAliases(Settings.KeysAliases);
 
-        var combination = new KeyboardManager.KeysCombination(Settings.ScreenshotTakeCombination, () => Console.WriteLine("pressed"));
+        var path = Path.Combine(Environment.CurrentDirectory, Settings.ScreenshotFilename);
 
-        combination.StartReadingAsync();
+        var combination = new KeyboardManager.KeysCombination(Settings.ScreenshotTakeCombination, () => ScreenManager.TakeScreenshot(path));
 
         var bot = TelegramBot.Instance;
 
-        bot.StartReceiving();
+        bot.Init(Settings.BotToken);
+
+        ScreenManager.ScreenshotTaken += async () => await bot.SendImageAsync(path, Settings.ReceiversUsernames);
 
         KeyboardManager.StartReadKeysAsync();
+        combination.StartReadingAsync();
 
         Wait();
     }

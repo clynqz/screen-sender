@@ -6,22 +6,22 @@ public static class Settings
 {
     public static readonly string BotToken;
 
-    public static readonly ImmutableHashSet<string> AllowUpdatesReceiveUsernames;
-
-    public static readonly ImmutableHashSet<string> ReceiversUsernames;
+    public static readonly ImmutableHashSet<long> ReceiversUsernames;
 
     public static readonly ImmutableArray<Keys> ScreenshotTakeCombination;
 
     public static readonly IReadOnlyDictionary<Keys, Keys> KeysAliases;
 
+    public static readonly string ScreenshotFilename;
+
     static Settings()
     {
         BotToken = Secret.BotToken;
-        AllowUpdatesReceiveUsernames = Secret.AllowUpdatesReceiveUsernames;
         ReceiversUsernames = Secret.ReceiversUsernames;
 
         ScreenshotTakeCombination = new List<Keys> { Keys.ControlKey, Keys.Menu, }.ToImmutableArray();
         KeysAliases = GetKeysAliases();
+        ScreenshotFilename = "screenshot.jpg";
     }
 
     private static IReadOnlyDictionary<Keys, Keys> GetKeysAliases()
