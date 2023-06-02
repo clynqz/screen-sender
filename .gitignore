@@ -1,0 +1,6 @@
+.vs/
+ScreenSender/bin/
+ScreenSender/obj/
+
+ScreenSender.sln
+ScreenSender/source/program/Secret.cs
