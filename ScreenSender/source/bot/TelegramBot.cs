@@ -1,5 +1,5 @@
 ﻿using Telegram.Bot;
-using Telegram.Bot.Types.InputFiles;
+using Telegram.Bot.Types;
 
 namespace ScreenSender.Bot;
 
@@ -25,15 +25,11 @@ public class TelegramBot
         _client = new TelegramBotClient(token);
     }
 
-    public async Task SendImageAsync(string imagePath, IEnumerable<long> receivers)
+    public async Task SendImageAsync(string filepath, long receiver)
     {
-        using var stream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
+        using var stream = new FileStream(filepath, FileMode.Open, FileAccess.Read);
+        var photo = new InputFileStream(stream);
 
-        var photo = new InputOnlineFile(stream);
-
-        foreach (var receiver in receivers)
-        {
-            await _client!.SendPhotoAsync(chatId: receiver, photo: photo, cancellationToken: CancellationToken.None);
-        }
+        await _client!.SendPhotoAsync(chatId: receiver, photo: photo, cancellationToken: CancellationToken.None);
     }
 }

@@ -6,22 +6,25 @@ public static class Settings
 {
     public static readonly string BotToken;
 
-    public static readonly ImmutableHashSet<long> ReceiversUsernames;
+    public static readonly long ReceiverId;
 
     public static readonly ImmutableArray<Keys> ScreenshotTakeCombination;
 
+    public static readonly ImmutableArray<Keys> ApplicationExitCombination;
+
     public static readonly IReadOnlyDictionary<Keys, Keys> KeysAliases;
 
-    public static readonly string ScreenshotFilename;
+    public static readonly DirectoryInfo ScreenshotSaveDir;
 
     static Settings()
     {
         BotToken = Secret.BotToken;
-        ReceiversUsernames = Secret.ReceiversUsernames;
+        ReceiverId = Secret.Receiver;
 
+        ScreenshotSaveDir = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "screenshots"));
         ScreenshotTakeCombination = new List<Keys> { Keys.ControlKey, Keys.Menu, }.ToImmutableArray();
+        ApplicationExitCombination = new List<Keys> { Keys.ShiftKey, Keys.Menu, }.ToImmutableArray();
         KeysAliases = GetKeysAliases();
-        ScreenshotFilename = "screenshot.jpg";
     }
 
     private static IReadOnlyDictionary<Keys, Keys> GetKeysAliases()

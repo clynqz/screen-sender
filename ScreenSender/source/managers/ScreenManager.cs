@@ -4,9 +4,7 @@ namespace ScreenSender.Managers;
 
 public static class ScreenManager
 {
-    public static event Action? ScreenshotTaken;
-
-    public static void TakeScreenshot(string filename)
+    public static string TakeScreenshot(ImageFormat format, DirectoryInfo saveDirInfo)
     {
         var screen = Screen.PrimaryScreen!;
 
@@ -15,13 +13,17 @@ public static class ScreenManager
 
         graphics.CopyFromScreen(screen.Bounds.X, screen.Bounds.Y, 0, 0, screen.Bounds.Size, CopyPixelOperation.SourceCopy);
 
-        SaveScreenshot(bitmap, ImageFormat.Jpeg, filename);
+        var filename = FileManager.GetScreenshotFilename(format);
+        var path = Path.Combine(saveDirInfo.FullName, filename);
+        var saveFileInfo = new FileInfo(path);
+
+        SaveScreenshot(bitmap, format, saveFileInfo);
+
+        return path;
     }
 
-    private static void SaveScreenshot(Bitmap bitmap, ImageFormat format, string filepath)
+    private static void SaveScreenshot(Bitmap bitmap, ImageFormat format, FileInfo saveFileInfo)
     {
-        bitmap.Save(filepath, format);
-
-        ScreenshotTaken?.Invoke();
+        bitmap.Save(saveFileInfo.FullName, format);
     }
 }
