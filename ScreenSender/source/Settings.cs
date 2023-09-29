@@ -19,7 +19,7 @@ public static class Settings
     static Settings()
     {
         BotToken = Secret.BotToken;
-        ReceiverId = Secret.Receiver;
+        ReceiverId = Secret.ReceiverId;
 
         ScreenshotSaveDir = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "screenshots"));
         ScreenshotTakeCombination = new List<Keys> { Keys.ControlKey, Keys.Menu, }.ToImmutableArray();
